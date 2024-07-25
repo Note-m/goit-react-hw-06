@@ -1,7 +1,9 @@
 import css from "./ContactForm.module.css";
-import { nanoid } from "nanoid";
+// import { nanoid } from "nanoid";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { addContact } from "../../redax/contactsSlice";
+import { useDispatch } from "react-redux";
 
 //validating schema for name and number
 const ContactSchema = Yup.object().shape({
@@ -15,20 +17,16 @@ const ContactSchema = Yup.object().shape({
     .required("This field is required"),
 });
 
-const ContactForm = ({ onAdd }) => {
-  //func submit
+const ContactForm = () => {
+  const dispatch = useDispatch();
+
   const handleSubmit = (values, { resetForm }) => {
-    onAdd({
-      id: nanoid(),
-      name: values.name,
-      number: values.number,
-    });
+    dispatch(addContact(values));
     resetForm();
   };
   return (
     <Formik
       initialValues={{
-        id: "",
         name: "",
         number: "",
       }}

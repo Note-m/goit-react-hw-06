@@ -1,19 +1,26 @@
 import css from "./ContactList.module.css";
 import Contact from "../Contact/Contact";
+import { selectFilter } from "../../redax/filtersSlice";
+import { selectAllContacts } from "../../redax/contactsSlice";
+import { useSelector } from "react-redux";
 
-const ContactList = ({ users, onDelete }) => {
+const ContactList = () => {
+  const contacts = useSelector(selectAllContacts);
+  const filterValue = useSelector(selectFilter);
+
+  // Фільтруємо контакти за іменем з використанням введеного значення
+  const filteredContacts = contacts.filter((contact) =>
+    contact.name.toLowerCase().includes(filterValue.toLowerCase())
+  );
+
   return (
-    <div className={css.contactWrapper}>
-      {users.map((user) => (
-        <Contact
-          key={user.id}
-          id={user.id}
-          name={user.name}
-          number={user.number}
-          onDelete={onDelete}
-        />
+    <ul className={css.contactWrapper}>
+      {filteredContacts.map((contact) => (
+        <li key={contact.id}>
+          <Contact contact={contact} />
+        </li>
       ))}
-    </div>
+    </ul>
   );
 };
 
